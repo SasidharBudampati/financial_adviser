@@ -1,0 +1,31 @@
+Ticker,Name,Market Cap ($),Sector,Country,Price ($),Price 1-Day Change (%),30-Day Relative Volume,Price 1-Year Change (%),S&P 500,Nasdaq,P/E,Next Report Date,Next Dividend Date,Ttm Dividend Yield (%),Annual Dividend Per Share  ($),Annual Revenue  ($),Annual Eps Diluted  ($)
+NVDA,NVIDIA Corporation,4426528070000,Technology,United States,181.81,1.10,0.96,33.96,true,true,51.75,2025-11-19,,0.02,0.03,130497000000,2.94
+MSFT,Microsoft Corporation,3802882261904,Technology,United States,511.61,-0.35,0.77,22.95,true,true,37.50,2025-10-29,2025-11-20,0.65,3.24,281724000000,13.64
+AAPL,Apple Inc.,3672254505500,Technology,United States,247.45,-0.76,0.73,6.76,true,true,37.62,2025-10-30,,0.41,0.98,391035000000,6.08
+GOOG,Alphabet Inc.,3046236720000,Communication Services,United States,251.88,0.07,0.92,51.06,true,true,26.83,2025-10-29,,0.25,0.60,349807000000,8.04
+GOOGL,Alphabet Inc.,3041157240000,Communication Services,United States,251.46,0.17,0.87,52.25,true,true,26.78,2025-10-29,,0.25,0.60,349807000000,8.04
+AMZN,"Amazon.com, Inc.",2287303698087,Consumer Cyclical,United States,214.47,-0.51,0.88,14.76,true,true,32.73,2025-10-30,,,,637959000000,5.53
+META,"Meta Platforms, Inc.",1788820597905,Communication Services,United States,712.07,-0.76,0.72,23.45,true,true,25.79,2025-10-29,,0.29,2.00,164501000000,23.86
+AVGO,Broadcom Inc.,1672425564750,Technology,United States,354.15,0.80,0.69,100.29,true,true,90.48,2025-12-11,,0.67,2.11,51574000000,1.23
+TSLA,"Tesla, Inc.",1382911215875,Consumer Cyclical,United States,428.75,-1.47,0.80,93.72,true,true,248.28,2025-10-22,,,,97690000000,2.04
+NFLX,"Netflix, Inc.",502938519417,Communication Services,United States,1183.59,-1.64,0.92,68.60,true,true,50.44,2025-10-21,,,,38876956000,19.83
+PLTR,Palantir Technologies Inc.,422561628288,Technology,United States,178.12,-0.84,0.76,324.80,true,true,591.96,2025-11-03,,,,2865507000,0.19
+COST,Costco Wholesale Corporation,410215531104,Consumer Defensive,United States,925.62,-3.08,1.07,4.31,true,true,50.84,2025-12-11,,0.53,4.92,275235000000,18.21
+ASML,ASML Holding N.V.,400902991918,Technology,Netherlands,1019.59,0.97,1.07,49.17,false,true,39.07,,,0.70,6.71,30571717700,20.81
+AMD,"Advanced Micro Devices, Inc.",380654218272,Technology,United States,234.56,-1.69,1.03,50.23,true,true,135.01,2025-11-04,,,,25785000000,1.00
+CSCO,"Cisco Systems, Inc.",273126380730,Technology,United States,69.09,-0.62,0.58,22.54,true,true,26.46,2025-11-12,,2.36,1.62,56654000000,2.55
+AZN,AstraZeneca PLC,259913280315,Healthcare,United Kingdom,83.83,-1.18,0.81,7.05,false,true,31.49,2025-11-06,,1.87,1.49,54095753300,2.25
+TMUS,"T-Mobile US, Inc.",254851132550,Communication Services,United States,226.45,-0.09,0.79,3.04,true,true,21.36,2025-10-23,2025-11-26,1.55,2.83,81400000000,9.66
+MU,"Micron Technology, Inc.",227333038980,Technology,United States,202.53,5.52,1.45,85.40,true,true,26.71,2025-12-17,,0.23,0.46,37378000000,7.59
+PEP,"PepsiCo, Inc.",208751813067,Consumer Defensive,United States,152.67,1.00,1.02,-12.50,true,true,20.67,2026-02-03,,3.64,5.33,91853000000,6.95
+LIN,Linde plc,208308356280,Basic Materials,United Kingdom,444.24,-1.59,1.71,-8.21,true,true,31.58,2025-10-31,,1.33,5.56,33005000000,13.62
+APP,AppLovin Corporation,204871199432,Communication Services,United States,605.68,0.56,0.36,318.14,true,true,89.98,2025-11-05,,,,4709248000,4.53
+SHOP,Shopify Inc.,203487891456,Technology,Canada,156.57,0.23,1.14,91.29,false,true,86.96,2025-11-04,,,,8880000000,1.55
+AMAT,"Applied Materials, Inc.",181411407328,Technology,United States,227.72,0.06,0.84,23.37,true,true,27.15,2025-11-13,2025-11-20,0.76,1.44,27176000000,8.61
+ARM,Arm Holdings plc,181335404160,Technology,United Kingdom,171.19,0.30,0.79,12.26,false,true,260.64,2025-11-05,,,,4007000000,0.75
+PDD,PDD Holdings Inc.,180791981775,Consumer Cyclical,Ireland,127.35,-0.18,0.39,-0.04,false,true,13.89,2025-11-20,,,,54723646000,10.56
+INTU,Intuit Inc.,180384046950,Technology,United States,646.99,-0.87,0.62,6.17,true,true,47.19,2025-11-20,,0.67,4.16,18831000000,13.67
+LRCX,Lam Research Corporation,180186461770,Technology,United States,142.37,-1.66,0.94,92.03,true,true,34.24,2025-10-22,,0.67,0.92,18435591000,4.15
+QCOM,QUALCOMM Incorporated,177042320000,Technology,United States,164.08,0.68,0.71,-4.32,true,true,15.83,2025-11-05,,2.12,3.30,38962000000,8.98
+INTC,Intel Corporation,175255911120,Technology,United States,36.84,-0.83,0.62,65.13,true,true,,2025-10-23,,,0.50,53101000000,-4.38
+BKNG,Booking Holdings Inc.,160503871869,Consumer Cyclical,United States,4952.31,-2.53,1.33,14.18,true,true,34.44,2025-10-28,,0.76,35.00,23739000000,172.68

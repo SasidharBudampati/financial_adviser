@@ -20,9 +20,20 @@ warnings.filterwarnings("ignore", category=UserWarning)
 class WebCrawlSchema(BaseModel):
     crawl: str = Field(..., description="This helps crawl in any website and share details.")
 
-class WebCrawlTool(WebCrawlSchema):
+class CrawlInput(BaseModel):
+    url: str
+    x: int
+    y: int
+    text: str
+    text_to_enter: str
+    element_id: str
+    page_source: str
+    user_task: str
+
+class WebCrawlTool(Tool):
     name: ClassVar[str]= "crawl_web"
     description : ClassVar[str]= "Crawl through any website being asked for and share the insights" 
+    input_schema = CrawlInput
 
     def __init__(self, *, extra_instructions: str = "") -> None:
         super().__init__()
@@ -30,10 +41,10 @@ class WebCrawlTool(WebCrawlSchema):
             self.description += f" {extra_instructions}"
 
     @property
-    def input_schema(self) -> type[WebCrawlSchema]:
-        return WebCrawlSchema
+    def input_schema(self) -> type[CrawlInput]:
+        return CrawlInput
 
-    async def _run(self, input: WebCrawlSchema, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
+    async def _run(self, input: CrawlInput, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
         return StringToolOutput("OK")
 
     def _create_emitter(self) -> Emitter:
@@ -53,15 +64,16 @@ if not constants.DISABLE_WEB_DRIVER:
 
     driver = selenium.webdriver.Chrome(options=options)
 
-class GoToURLTool(Tool[WebCrawlSchema]):
-    def run(self,url: str) -> str:
-        """Navigates the browser to the given URL."""
-        print(f"🌐 Navigating to URL: {url}")  # Added print statement
-        driver.get(url.strip())
-        return f"Navigated to URL: {url}"
-
+class GoToURLTool(Tool):
     name: ClassVar[str]= "go_to_url"
     description : ClassVar[str]= "Navigates the browser to the given URL." 
+    input_schema = CrawlInput
+
+    # def run(self, input: CrawlInput) -> str:
+    #     """Navigates the browser to the given URL."""
+    #     print(f"🌐 Navigating to URL: {input.url}")  # Added print statement
+    #     driver.get(input.url)
+    #     return f"Navigated to URL: {input.url}"
 
     def __init__(self, *, extra_instructions: str = "") -> None:
         super().__init__()
@@ -69,26 +81,30 @@ class GoToURLTool(Tool[WebCrawlSchema]):
             self.description += f" {extra_instructions}"
 
     @property
-    def input_schema(self) -> type[WebCrawlSchema]:
-        return WebCrawlSchema
+    def input_schema(self) -> type[CrawlInput]:
+        return CrawlInput
 
-    async def _run(self, input: WebCrawlSchema, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
-        return StringToolOutput("OK")
-
+    async def _run(self, input: CrawlInput, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
+        """Navigates the browser to the given URL."""
+        print(f"🌐 Navigating to URL: {input.url}")  # Added print statement
+        driver.get(input.url)
+        return f"Navigated to URL: {input.url}"
+ 
     def _create_emitter(self) -> Emitter:
         return Emitter.root().child(
             namespace=["tool", "go_to_url"],
             creator=self,
         )
 
-class ClickAtCoordinates(Tool[WebCrawlSchema]):
-    def run(self, x: int, y: int) -> str:
-        """Clicks at the specified coordinates on the screen."""
-        driver.execute_script(f"window.scrollTo({x}, {y});")
-        driver.find_element(By.TAG_NAME, "body").click()
-
+class ClickAtCoordinates(Tool):
     name: ClassVar[str]= "click_at_coordinates"
     description : ClassVar[str]= "Clicks at the specified coordinates on the screen." 
+    input_schema = CrawlInput
+
+    # def run(self, x: int, y: int) -> str:
+    #     """Clicks at the specified coordinates on the screen."""
+    #     driver.execute_script(f"window.scrollTo({x}, {y});")
+    #     driver.find_element(By.TAG_NAME, "body").click()
 
     def __init__(self, *, extra_instructions: str = "") -> None:
         super().__init__()
@@ -96,11 +112,13 @@ class ClickAtCoordinates(Tool[WebCrawlSchema]):
             self.description += f" {extra_instructions}"
 
     @property
-    def input_schema(self) -> type[WebCrawlSchema]:
-        return WebCrawlSchema
+    def input_schema(self) -> type[CrawlInput]:
+        return CrawlInput
 
-    async def _run(self, input: WebCrawlSchema, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
-        return StringToolOutput("OK")
+    async def _run(self, input: CrawlInput, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
+        """Clicks at the specified coordinates on the screen."""
+        driver.execute_script(f"window.scrollTo({input.x}, {input.y});")
+        driver.find_element(By.TAG_NAME, "body").click()
 
     def _create_emitter(self) -> Emitter:
         return Emitter.root().child(
@@ -109,12 +127,40 @@ class ClickAtCoordinates(Tool[WebCrawlSchema]):
         )
 
 class FindElementWithText(Tool[WebCrawlSchema]):
-    def run(self, text: str) -> str:
+    name: ClassVar[str]= "find_element_with_text"
+    description : ClassVar[str]= "Finds an element on the page with the given text." 
+    input_schema = CrawlInput
+
+    # def run(self, text: str) -> str:
+    #     """Finds an element on the page with the given text."""
+    #     print(f"🔍 Finding element with text: '{text}'")  # Added print statement
+
+    #     try:
+    #         element = driver.find_element(By.XPATH, f"//*[text()='{text}']")
+    #         if element:
+    #             return "Element found."
+    #         else:
+    #             return "Element not found."
+    #     except selenium.common.exceptions.NoSuchElementException:
+    #         return "Element not found."
+    #     except selenium.common.exceptions.ElementNotInteractableException:
+    #         return "Element not interactable, cannot click."
+
+    def __init__(self, *, extra_instructions: str = "") -> None:
+        super().__init__()
+        if extra_instructions:
+            self.description += f" {extra_instructions}"
+
+    @property
+    def input_schema(self) -> type[CrawlInput]:
+        return CrawlInput
+
+    async def _run(self, input: CrawlInput, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
         """Finds an element on the page with the given text."""
-        print(f"🔍 Finding element with text: '{text}'")  # Added print statement
+        print(f"🔍 Finding element with text: '{input.text}'")  # Added print statement
 
         try:
-            element = driver.find_element(By.XPATH, f"//*[text()='{text}']")
+            element = driver.find_element(By.XPATH, f"//*[text()='{input.text}']")
             if element:
                 return "Element found."
             else:
@@ -124,21 +170,6 @@ class FindElementWithText(Tool[WebCrawlSchema]):
         except selenium.common.exceptions.ElementNotInteractableException:
             return "Element not interactable, cannot click."
 
-    name: ClassVar[str]= "find_element_with_text"
-    description : ClassVar[str]= "Finds an element on the page with the given text." 
-
-    def __init__(self, *, extra_instructions: str = "") -> None:
-        super().__init__()
-        if extra_instructions:
-            self.description += f" {extra_instructions}"
-
-    @property
-    def input_schema(self) -> type[WebCrawlSchema]:
-        return WebCrawlSchema
-
-    async def _run(self, input: WebCrawlSchema, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
-        return StringToolOutput("OK")
-
     def _create_emitter(self) -> Emitter:
         return Emitter.root().child(
             namespace=["tool", "find_element_with_text"],
@@ -146,23 +177,9 @@ class FindElementWithText(Tool[WebCrawlSchema]):
         )
 
 class ClickElementWithText(Tool[WebCrawlSchema]):
-    def run(self, text: str) -> str:
-        """Clicks on an element on the page with the given text."""
-        print(f"🖱️ Clicking element with text: '{text}'")  # Added print statement
-
-        try:
-            element = driver.find_element(By.XPATH, f"//*[text()='{text}']")
-            element.click()
-            return f"Clicked element with text: {text}"
-        except selenium.common.exceptions.NoSuchElementException:
-            return "Element not found, cannot click."
-        except selenium.common.exceptions.ElementNotInteractableException:
-            return "Element not interactable, cannot click."
-        except selenium.common.exceptions.ElementClickInterceptedException:
-            return "Element click intercepted, cannot click."
-
     name: ClassVar[str]= "click_element_with_text"
     description : ClassVar[str]= "Clicks on an element on the page with the given text." 
+    input_schema = CrawlInput
 
     def __init__(self, *, extra_instructions: str = "") -> None:
         super().__init__()
@@ -170,11 +187,23 @@ class ClickElementWithText(Tool[WebCrawlSchema]):
             self.description += f" {extra_instructions}"
 
     @property
-    def input_schema(self) -> type[WebCrawlSchema]:
-        return WebCrawlSchema
+    def input_schema(self) -> type[CrawlInput]:
+        return CrawlInput
 
-    async def _run(self, input: WebCrawlSchema, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
-        return StringToolOutput("OK")
+    async def _run(self, input: CrawlInput, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
+        """Clicks on an element on the page with the given text."""
+        print(f"🖱️ Clicking element with text: '{input.text}'")  # Added print statement
+
+        try:
+            element = driver.find_element(By.XPATH, f"//*[text()='{input.text}']")
+            element.click()
+            return f"Clicked element with text: {input.text}"
+        except selenium.common.exceptions.NoSuchElementException:
+            return "Element not found, cannot click."
+        except selenium.common.exceptions.ElementNotInteractableException:
+            return "Element not interactable, cannot click."
+        except selenium.common.exceptions.ElementClickInterceptedException:
+            return "Element click intercepted, cannot click."
 
     def _create_emitter(self) -> Emitter:
         return Emitter.root().child(
@@ -183,25 +212,9 @@ class ClickElementWithText(Tool[WebCrawlSchema]):
         )
 
 class EnterTextIntoElement(Tool[WebCrawlSchema]):
-    def run(self, text_to_enter: str, element_id: str) -> str:
-        """Enters text into an element with the given ID."""
-        print(
-            f"📝 Entering text '{text_to_enter}' into element with ID: {element_id}"
-        )  # Added print statement
-
-        try:
-            input_element = driver.find_element(By.ID, element_id)
-            input_element.send_keys(text_to_enter)
-            return (
-                f"Entered text '{text_to_enter}' into element with ID: {element_id}"
-            )
-        except selenium.common.exceptions.NoSuchElementException:
-            return "Element with given ID not found."
-        except selenium.common.exceptions.ElementNotInteractableException:
-            return "Element not interactable, cannot click."
-
     name: ClassVar[str]= "enter_text_into_element"
     description : ClassVar[str]= "Enters text into an element with the given ID." 
+    input_schema = CrawlInput
 
     def __init__(self, *, extra_instructions: str = "") -> None:
         super().__init__()
@@ -209,27 +222,36 @@ class EnterTextIntoElement(Tool[WebCrawlSchema]):
             self.description += f" {extra_instructions}"
 
     @property
-    def input_schema(self) -> type[WebCrawlSchema]:
-        return WebCrawlSchema
+    def input_schema(self) -> type[CrawlInput]:
+        return CrawlInput
 
-    async def _run(self, input: WebCrawlSchema, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
-        return StringToolOutput("OK")
+    async def _run(self, input: CrawlInput, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
+        """Enters text into an element with the given ID."""
+        print(
+            f"📝 Entering text '{input.text_to_enter}' into element with ID: {input.element_id}"
+        )  # Added print statement
 
+        try:
+            input_element = driver.find_element(By.ID, input.element_id)
+            input_element.send_keys(input.text_to_enter)
+            return (
+                f"Entered text '{input.text_to_enter}' into element with ID: {input.element_id}"
+            )
+        except selenium.common.exceptions.NoSuchElementException:
+            return "Element with given ID not found."
+        except selenium.common.exceptions.ElementNotInteractableException:
+            return "Element not interactable, cannot click."
     def _create_emitter(self) -> Emitter:
         return Emitter.root().child(
             namespace=["tool", "enter_text_into_element"],
             creator=self,
         )
 
-class ScrollDownScreen(Tool[WebCrawlSchema]):
-    def run(self) -> str:
-        """Scrolls down the screen by a moderate amount."""
-        print("⬇️ scroll the screen")  # Added print statement
-        driver.execute_script("window.scrollBy(0, 500)")
-        return "Scrolled down the screen."
+class ScrollDownScreen(Tool):
 
     name: ClassVar[str]= "scroll_down_screen"
     description : ClassVar[str]= "Scrolls down the screen by a moderate amount." 
+    input_schema = CrawlInput
 
     def __init__(self, *, extra_instructions: str = "") -> None:
         super().__init__()
@@ -237,11 +259,14 @@ class ScrollDownScreen(Tool[WebCrawlSchema]):
             self.description += f" {extra_instructions}"
 
     @property
-    def input_schema(self) -> type[WebCrawlSchema]:
-        return WebCrawlSchema
+    def input_schema(self) -> type[CrawlInput]:
+        return CrawlInput
 
-    async def _run(self, input: WebCrawlSchema, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
-        return StringToolOutput("OK")
+    async def _run(self, input: CrawlInput, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
+        """Scrolls down the screen by a moderate amount."""
+        print("⬇️ scroll the screen")  # Added print statement
+        driver.execute_script("window.scrollBy(0, 500)")
+        return "Scrolled down the screen."
 
     def _create_emitter(self) -> Emitter:
         return Emitter.root().child(
@@ -249,15 +274,11 @@ class ScrollDownScreen(Tool[WebCrawlSchema]):
             creator=self,
         )
 
-class GetPageSource(Tool[WebCrawlSchema]):
-    def run(self) -> str:
-        LIMIT = 1000000
-        """Returns the current page source."""
-        print("📄 Getting page source...")  # Added print statement
-        return driver.page_source[0:LIMIT]
+class GetPageSource(Tool):
 
     name: ClassVar[str]= "get_page_source"
     description : ClassVar[str]= "Returns the current page source." 
+    input_schema = CrawlInput
 
     def __init__(self, *, extra_instructions: str = "") -> None:
         super().__init__()
@@ -265,11 +286,14 @@ class GetPageSource(Tool[WebCrawlSchema]):
             self.description += f" {extra_instructions}"
 
     @property
-    def input_schema(self) -> type[WebCrawlSchema]:
-        return WebCrawlSchema
+    def input_schema(self) -> type[CrawlInput]:
+        return CrawlInput
 
-    async def _run(self, input: WebCrawlSchema, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
-        return StringToolOutput("OK")
+    async def _run(self, input: CrawlInput, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
+        LIMIT = 1000000
+        """Returns the current page source."""
+        print("📄 Getting page source...")  # Added print statement
+        return driver.page_source[0:LIMIT]
 
     def _create_emitter(self) -> Emitter:
         return Emitter.root().child(
@@ -277,10 +301,21 @@ class GetPageSource(Tool[WebCrawlSchema]):
             creator=self,
         )
 
-class AnalyzeWebpagAndDetermineAction(Tool[WebCrawlSchema]):
-    def run(self,
-        page_source: str, user_task: str, tool_context: ToolContext
-    ) -> str:
+class AnalyzeWebpagAndDetermineAction(Tool):
+    name: ClassVar[str]= "analyze_webpage_and_determine_action"
+    description : ClassVar[str]= "Analyzes the webpage and determines the next action (scroll, click, etc.)." 
+    input_schema = CrawlInput
+
+    def __init__(self, *, extra_instructions: str = "") -> None:
+        super().__init__()
+        if extra_instructions:
+            self.description += f" {extra_instructions}"
+
+    @property
+    def input_schema(self) -> type[CrawlInput]:
+        return CrawlInput
+
+    async def _run(self, input: CrawlInput, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
         """Analyzes the webpage and determines the next action (scroll, click, etc.)."""
         print(
             "🤔 Analyzing webpage and determining next action..."
@@ -289,10 +324,10 @@ class AnalyzeWebpagAndDetermineAction(Tool[WebCrawlSchema]):
         analysis_prompt = f"""
         You are an expert web page analyzer.
         You have been tasked with controlling a web browser to achieve a user's goal.
-        The user's task is: {user_task}
+        The user's task is: {input.user_task}
         Here is the current HTML source code of the webpage:
         ```html
-        {page_source}
+        {input.page_source}
         ```
 
         Based on the webpage content and the user's task, determine the next best action to take.
@@ -328,21 +363,6 @@ class AnalyzeWebpagAndDetermineAction(Tool[WebCrawlSchema]):
         What is your action plan?
         """
         return analysis_prompt
-
-    name: ClassVar[str]= "analyze_webpage_and_determine_action"
-    description : ClassVar[str]= "Analyzes the webpage and determines the next action (scroll, click, etc.)." 
-
-    def __init__(self, *, extra_instructions: str = "") -> None:
-        super().__init__()
-        if extra_instructions:
-            self.description += f" {extra_instructions}"
-
-    @property
-    def input_schema(self) -> type[WebCrawlSchema]:
-        return WebCrawlSchema
-
-    async def _run(self, input: WebCrawlSchema, options: ToolRunOptions | None, context: RunContext) -> StringToolOutput:
-        return StringToolOutput("OK")
 
     def _create_emitter(self) -> Emitter:
         return Emitter.root().child(
