@@ -50,7 +50,7 @@ async def main() -> None:
          6. Reasons for the pojections,
          7. Most important news in last 3 months, Reference to sites you have reviewed
 
-         Use all the tools provided to fetch the required information and show the final result
+         Use the tools, as reqiured, to fetch the required information and show the final result
     """
 
     agent = RequirementAgent(
