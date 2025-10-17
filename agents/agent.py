@@ -27,7 +27,7 @@ from rag.chroma_tool import ChromaRetrieverTool
 logger = get_logger(__name__)
 load_dotenv(dotenv_path=".secret")
 
-async def main() -> None:
+def getAgent() -> RequirementAgent:
     # llm = ChatModel.from_name("gemini:gemini-2.5-flash")
     # agent = ReActAgent(
     #     llm=llm,
@@ -78,17 +78,4 @@ async def main() -> None:
     )
     agent.allow_parallel_tool_calls = True
 
-    prompt ="""
-       user prompt: Provide me the list of all AI stocks in assending order.
-    """
-    print(f"Final prompt: {prompt}")
-    response = await agent.run(prompt)
-
-    print(f"Agent 🤖 :  {response.last_message.text}")
-
-if __name__ == "__main__":
-    try:
-        asyncio.run(main())
-    except FrameworkError as e:
-        traceback.print_exc()
-        sys.exit(e.explain())
+    return agent

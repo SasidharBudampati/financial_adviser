@@ -2,7 +2,7 @@
 from beeai_framework.tools import Tool
 from pydantic import BaseModel
 from beeai_framework.tools import StringToolOutput
-from bge_embedder import BGEEmbedder
+from .bge_embedder import BGEEmbedder
 from chromadb import Client
 from chromadb.config import Settings
 
