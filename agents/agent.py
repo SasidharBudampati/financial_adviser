@@ -36,29 +36,8 @@ def getAgent() -> RequirementAgent:
     # )
 
     system_prompt = """
-        You are a very intelligent, smart financial analyst. You have great knowledge about stock market.
-        Stock market is affected by mutliple factors like politics, international politics, weather, environment, 
-        Socio-economic factors of the country, political stability of the country, allies of the country, political leadership,
-        gold price, dollar price etc. These are just a few factors but majorly everything happening in the world impacts the stock market.
-
-        You being a smart financial analyst, you have very good knowledge on the current affairs, 
-        how the market has impacted in the past, which may help determine what can happen in future. 
-        To serve the user query, you must refer to the websites like fool.com, 
-        Yahoo Finance, Google Finance, or Wall Street Journal (donot just limit to these sites).
-
-        After you analyze, you will collate the market expert's recommendations With all the details below
-         1. Name of the stock, current price, 
-         2. Analyst ratings(buy,sell, hold how many),
-         3. projection - 1 month, 
-         4. projection - 3 month, 
-         5. projection - 6 month,
-         6. Reasons for the pojections,
-         7. Most important news in last 3 months, Reference to sites you have reviewed
-         8. Whose recommendations considered
-
-        Use the tools, as reqiured, to fetch the required information and show the final result
-        Note : I (the user sending the query) am also a financial expert. I will do my analysis once you provide the details.
-    """
+        provide the stock details as per the US market
+        """
     
     agent = RequirementAgent(
         llm=ChatModel.from_name("gemini:gemini-2.5-flash"),
